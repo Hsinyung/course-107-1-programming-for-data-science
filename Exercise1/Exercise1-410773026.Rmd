@@ -1,10 +1,10 @@
----
+ ---
 title: "練習1"
 date: "2018-10-03"
 output: html_document
 params:
-  studentID: "你的學號"
-  studentName: "你的名字"
+  studentID: "410773026"
+  studentName: "諸葛玟辰"
 ---
 存檔時，請用你的學號當延伸檔名。例如：若你的學號為41078392，則請`File->Save As...`存成Exercise1-41078392.Rmd。
 
@@ -19,17 +19,30 @@ bankdata <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/ma
 ### 1.1
 將**銀行**變數改成factor
 ```{r ans11}
+as.factor(bankdata$銀行)
 ```
 
 ### 1.2
 將年月改成西元年月
 ```{r ans12}
+library(stringr)
+year<- str_sub(bankdata$年月,1,3)
+month<- str_sub(bankdata$年月,5,6)
+year<- as.integer(year)+1911
+str_c(year, month, sep = "/")
+```
+
 ```
 
 ## 2
 Google天災地圖會發佈天災時地資訊，如[潭美颱風(Typhoon Trami)](https://google.org/crisismap/google.com/2018-trami)，但它的時間是以UTC表示，如"2018/30/09 00:00 UTC",試透過`lubridate::with_tz()`將"2018/30/09 00:00 UTC"轉成台灣時間。(Hint: 台灣tzone可用`grep("Taipei",OlsonNames(),value=TRUE)`指令查得)
 
 ```{r ans2}
+```{r}
+library(lubridate)
+bc<- ydm_hm("2018/30/09 00:00")
+with_tz(bc)
 ```
+
 
 
