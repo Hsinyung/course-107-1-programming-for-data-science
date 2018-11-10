@@ -26,9 +26,9 @@ mean(gsHW2ws$ans1 , na.rm = TRUE)
 ## 1.2
 使用`stringr::str_which()`來找出gsHW2ws中所有變數名稱包含的"ans"的欄位位置。
 ```{r ans12}
+ a <-as.character(gsHW2ws)
 library(stringr)
-x <-as.character(gsHW2ws)
-str_which(x , "ans")
+gsHW2ws[ , 1:5]
 ```
 
 ## 1.3
@@ -55,13 +55,28 @@ gsHW2ws$成績 = (gsHW2ws$成績*5 + 5)
 ## 1.6
 答對4題的人，最常錯的問題是那兩題？請找出其題目代碼。(`min()`與`max()`可找出極小與極大值，而`which()`可找出符合設定條件的元素位置)
 ```{r ans16}
-a <- gsHW2ws[(gsHW2ws$答對率 == "0.8") , ]
-
+library(dplyr)
+gsHW2ws %>% mutate( ans1 <- as.numeric(ans1),
+                    ans21 <- as.numeric(ans21),
+                    ans22 <- as.numeric(ans22),
+                    ans23 <- as.numeric(ans23),
+                    ans24 <-as.numeric(ans24)
+)
+a <-gsHW2ws[(gsHW2ws$答對率 == "0.8") , 1:5]
+a <-colSums(a)
+which.min(a)
+b <-gsHW2ws[(gsHW2ws$答對率 == "0.8") ,c(1:3 , 5) ]
+b <-colSums(b)
+which.min(b)
 ```
 
 ## 1.7
 答對3題的人，有那幾題正確率低於5成？請找出其題目代碼。
 ```{r ans17}
+x <-gsHW2ws[(gsHW2ws$答對率 == "0.6") , 1:5]
+y <-colSums(x)
+a <-y / 6
+which(a < 0.5)
 ```
 
 
@@ -119,14 +134,17 @@ exData %>% mutate_at(
 
 ```{r ans32}
 library(dplyr)
+library(readr)
 exData %>% mutate_at(
   vars(contains("USD/")),
       funs(parse_number(.,locale = a , na = c("NA","","-"))) 
-      )
+      ) ->x
+
 ```
 
 ## 3.3
 將上題轉換的匯率變數名稱中英文拿掉，如原名為"英鎊USD/GBP"則需改成"英鎊"。改題方式會去檢查整個dataframe中需要改的那幾欄的欄位名稱，故最後一行請寫dataframe名稱。
 (hint: `colnames()`支援generic replacement; `str_locate()`可找出元素中某個符號的位置;`str_sub()`可取出所要字元)
 ```{r ans33}
+colnames(exData) <- c("期間" , "新台幣" , "日圓" , "英鎊" , "港幣" , "韓元" , "加拿大幣", "新加坡元" , "人民幣", "澳幣", "印尼盾", "泰銖", "馬來西亞幣", "菲律賓披索", "歐元", "馬克", "法國法郎", "荷蘭幣", "越南盾")
 ```
